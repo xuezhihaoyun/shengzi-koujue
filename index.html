@@ -5,335 +5,191 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>生字口诀查询 - 小学语文一至二年级</title>
 <style>
+/* ===== 汉典风 · 宣纸底色 + 深红点缀 + 白卡细边 ===== */
+:root {
+    --paper: #f6f1e6;      /* 宣纸米白 */
+    --ink: #2e2a26;        /* 墨色 */
+    --red: #8e2f27;        /* 汉典深红 */
+    --red-soft: #b04a3c;
+    --line: #e2dac7;       /* 卡片细边 */
+    --muted: #8a8073;      /* 次要文字 */
+    --chip: #faf5ea;       /* 标签底 */
+    --chip-line: #cfc2a8;
+}
 * { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { overflow-x: hidden; }
 body {
     font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Heiti SC", sans-serif;
-    background: linear-gradient(135deg, #fef9e7 0%, #fdebd0 50%, #fad7a0 100%);
+    background: var(--paper);
     min-height: 100vh;
-    color: #2c3e50;
-    line-height: 1.6;
+    color: var(--ink);
+    line-height: 1.7;
 }
-.container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px;
-}
-header {
-    text-align: center;
-    padding: 30px 20px 20px;
-}
+.container { max-width: 880px; margin: 0 auto; padding: 24px 20px 40px; }
+
+/* 顶部：标题 + 回纹式双线分隔 */
+header { text-align: center; padding: 18px 20px 18px; border-bottom: 3px double var(--red); margin-bottom: 24px; }
 h1 {
-    font-size: 2.4em;
-    color: #e74c3c;
-    margin-bottom: 8px;
-    text-shadow: 2px 2px 0 #fff, 4px 4px 0 #f39c12;
-    letter-spacing: 4px;
+    font-family: "STSong", "SimSun", "宋体", serif;
+    font-size: 2.1em;
+    color: var(--red);
+    letter-spacing: 10px;
+    text-indent: 10px;
+    font-weight: 700;
 }
-.subtitle {
-    color: #7f8c8d;
-    font-size: 1.05em;
-    margin-top: 6px;
-}
+.subtitle { color: var(--muted); font-size: 0.98em; margin-top: 8px; letter-spacing: 2px; }
+
+/* 搜索框：白底细边 */
 .search-box {
     background: #fff;
-    border-radius: 24px;
-    padding: 18px 24px;
-    box-shadow: 0 8px 30px rgba(231, 76, 60, 0.15);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border: 3px solid #f39c12;
-}
-.search-icon {
-    font-size: 1.6em;
-    color: #e74c3c;
-}
-#searchInput {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 1.5em;
-    padding: 8px 0;
-    background: transparent;
-    color: #2c3e50;
-    font-family: inherit;
-}
-#searchInput::placeholder { color: #bdc3c7; }
-.grade-tabs {
-    display: flex;
-    gap: 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 12px 18px;
     margin-bottom: 18px;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: flex; align-items: center; gap: 12px;
 }
-.tab {
-    background: #fff;
-    border: 3px solid transparent;
-    color: #7f8c8d;
-    padding: 10px 20px;
-    border-radius: 22px;
-    cursor: pointer;
-    font-size: 1.05em;
-    font-weight: 600;
-    transition: all 0.25s;
-    font-family: inherit;
+.search-box:focus-within { border-color: var(--red); }
+.search-icon { font-size: 1.2em; color: var(--red); }
+#searchInput {
+    flex: 1; border: none; outline: none;
+    font-size: 1.3em; padding: 4px 0;
+    background: transparent; color: var(--ink); font-family: inherit;
 }
-.tab:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.tab.active { background: #e74c3c; color: #fff; border-color: #c0392b; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3); }
-.tab .count {
-    display: inline-block;
-    background: rgba(255,255,255,0.3);
-    border-radius: 10px;
-    padding: 2px 8px;
-    font-size: 0.85em;
-    margin-left: 6px;
-}
-.tab.active .count { background: rgba(255,255,255,0.3); }
-.tab:not(.active) .count { background: #ecf0f1; color: #7f8c8d; }
+#searchInput::placeholder { color: #c3b9a6; }
 
+/* 年级标签 */
+.grade-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+.tab {
+    background: #fff; border: 1px solid var(--line); color: #6f6657;
+    padding: 6px 16px; border-radius: 4px; cursor: pointer;
+    font-size: 0.98em; transition: all 0.15s; font-family: inherit;
+}
+.tab:hover { border-color: var(--red); color: var(--red); }
+.tab.active { background: var(--red); color: #fff; border-color: var(--red); }
+.tab .count {
+    display: inline-block; background: var(--chip);
+    border-radius: 3px; padding: 0 7px; font-size: 0.85em; margin-left: 5px; color: var(--muted);
+}
+.tab.active .count { background: rgba(255,255,255,0.22); color: #fff; }
+
+/* 卡片 */
 .card {
     background: #fff;
-    border-radius: 20px;
-    padding: 28px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 26px 28px;
     margin-bottom: 18px;
-    border: 2px solid #fdebd0;
 }
-.result-card {
-    display: none;
-    animation: fadeIn 0.4s;
-}
+.result-card { display: none; animation: fadeIn 0.3s; }
 .result-card.show { display: block; }
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.char-display {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-bottom: 18px;
-    padding: 20px;
-    background: linear-gradient(135deg, #fff5e1 0%, #fdebd0 100%);
-    border-radius: 16px;
-}
-.char-display .tianzi-display {
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* 字展示区：左格右信息 */
+.char-display { display: flex; align-items: flex-start; gap: 28px; }
+.tianzi-display {
     flex-shrink: 0;
+    border: 1px solid #d8cfba; border-radius: 4px;
+    padding: 6px; background: #fff;
 }
-.char-info {
-    flex: 1;
-    min-width: 0;
+.tianzi-display svg { max-width: 100%; height: auto; display: block; }
+.char-info { flex: 1; min-width: 0; padding-top: 4px; }
+
+/* 汉典式字段标签 */
+.meta-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; }
+.meta-label {
+    flex-shrink: 0;
+    font-size: 0.85em; color: #8a6f4d;
+    border: 1px solid var(--chip-line); border-radius: 3px;
+    background: var(--chip); padding: 1px 9px;
 }
-.pinyin {
-    font-size: 2em;
-    color: #2c3e50;
-    font-style: italic;
-    font-weight: 600;
-    line-height: 1.4;
-}
-.grade-badge {
-    display: inline-block;
-    margin-top: 10px;
-    background: #e74c3c;
-    color: #fff;
-    padding: 4px 14px;
-    border-radius: 14px;
-    font-size: 0.9em;
-    font-weight: 600;
-}
-.mnemonic-section {
-    margin-top: 20px;
-}
+.meta-value { font-size: 1.15em; color: var(--ink); }
+.meta-value.pinyin-text { font-size: 1.5em; font-style: italic; font-weight: 600; }
+.tianzi-actions { margin-top: 14px; }
+
+/* 区块标题：深红 + 下划线 */
+.mnemonic-section { margin-top: 22px; }
 .section-title {
-    font-size: 1.2em;
-    color: #e67e22;
-    margin-bottom: 12px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 1.1em; color: var(--red);
+    margin-bottom: 10px; font-weight: 700;
+    padding-bottom: 6px; border-bottom: 1px solid #e8e0cd;
+    display: flex; align-items: center; gap: 8px;
 }
 .mnemonic-text {
-    background: #fdf2e9;
-    padding: 16px 20px;
-    border-radius: 12px;
-    line-height: 1.9;
-    color: #34495e;
-    font-size: 1.08em;
-    border-left: 4px solid #f39c12;
+    background: #fbf7ec;
+    border-left: 3px solid var(--red);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    line-height: 2; color: #4a4238; font-size: 1.06em;
 }
 .tip-text {
-    background: #e8f6f3;
+    background: #f3f5ef;
+    border-left: 3px solid #6e7f5a;
+    border-radius: 0 6px 6px 0;
     padding: 12px 18px;
-    border-radius: 12px;
-    line-height: 1.7;
-    color: #16a085;
-    font-size: 1em;
-    border-left: 4px solid #1abc9c;
-    margin-top: 10px;
-}
-.source-lessons {
-    margin-top: 14px;
-    font-size: 0.92em;
-    color: #7f8c8d;
-}
-.source-lessons strong { color: #34495e; }
-.source-lessons span {
-    display: inline-block;
-    background: #ecf0f1;
-    padding: 2px 10px;
-    border-radius: 10px;
-    margin: 2px 4px 2px 0;
-    font-size: 0.92em;
+    line-height: 1.8; color: #55614a; font-size: 1em;
 }
 
-.empty-state {
-    text-align: center;
-    padding: 50px 20px;
-    color: #95a5a6;
-}
-.empty-state .icon { font-size: 4em; margin-bottom: 12px; }
-.empty-state .text { font-size: 1.15em; }
+/* 空状态 */
+.empty-state { text-align: center; padding: 46px 20px; color: #b0a693; }
+.empty-state .icon { font-size: 3.2em; margin-bottom: 10px; }
+.empty-state .text { font-size: 1.05em; }
 
-.char-grid-section {
-    background: #fff;
-    border-radius: 20px;
-    padding: 22px 24px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    border: 2px solid #fdebd0;
-}
+/* 字表 */
+.char-grid-section { margin-top: 4px; }
 .char-grid-title {
-    font-size: 1.2em;
-    color: #e67e22;
-    margin-bottom: 14px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 1.05em; color: var(--red); font-weight: 700;
+    padding-bottom: 6px; border-bottom: 1px solid #e8e0cd; margin-bottom: 14px;
 }
-.char-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
-    gap: 8px;
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 4px;
-}
+.char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 8px; }
 .char-cell {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4em;
-    background: #fdf2e9;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: #2c3e50;
-    font-weight: 500;
-    user-select: none;
-    border: 2px solid transparent;
+    background: #fff; border: 1px solid var(--line); border-radius: 5px;
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 1.3em; cursor: pointer; transition: all 0.12s; color: var(--ink);
+    font-family: "STKaiti", "KaiTi", "楷体", serif;
 }
-.char-cell:hover {
-    background: #f39c12;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
-    border-color: #e67e22;
-}
-.char-cell.active {
-    background: #e74c3c;
-    color: #fff;
-    border-color: #c0392b;
-}
-.no-results {
-    text-align: center;
-    padding: 30px;
-    color: #95a5a6;
-    font-size: 1.05em;
-}
-footer {
-    text-align: center;
-    color: #95a5a6;
-    padding: 30px 20px 20px;
-    font-size: 0.92em;
-}
+.char-cell:hover { border-color: var(--red); color: var(--red); }
+.char-cell.active { background: var(--red); color: #fff; border-color: var(--red); }
+.no-results { grid-column: 1/-1; text-align: center; color: var(--muted); padding: 28px; }
 
-/* === 田字格 === */
-.tianzi-display {
-    display: inline-block;
-    background: #fff;
-    box-shadow: 0 6px 20px rgba(33, 150, 243, 0.15);
-    border-radius: 6px;
-    line-height: 0;
-}
-.tianzi-display svg { display: block; }
-.tianzi-actions {
-    margin-top: 14px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
+/* 按钮 */
 .btn {
-    padding: 9px 20px;
-    border: none;
-    border-radius: 20px;
-    font-size: 0.95em;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s;
-    font-family: inherit;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    background: var(--red); color: #fff; border: none;
+    padding: 8px 18px; border-radius: 5px; cursor: pointer;
+    font-size: 0.95em; font-family: inherit; transition: background 0.15s;
 }
-.btn-primary {
-    background: #e74c3c;
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(231,76,60,0.25);
-}
-.btn-primary:hover { background: #c0392b; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(231,76,60,0.35); }
-
-/* Speaker button */
+.btn:hover { background: var(--red-soft); }
 .speaker-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    border: none;
-    background: #e67e22;
-    color: #fff;
-    cursor: pointer;
-    font-size: 0.95em;
-    transition: all 0.2s;
-    margin-left: 6px;
-    flex-shrink: 0;
+    background: var(--red); color: #fff; border: none; border-radius: 50%;
+    width: 30px; height: 30px; cursor: pointer; font-size: 0.85em;
+    display: inline-flex; align-items: center; justify-content: center;
+    vertical-align: middle; transition: background 0.15s;
 }
-.speaker-btn:hover { background: #d35400; transform: scale(1.1); }
-.speaker-btn.playing { background: #e74c3c; animation: pulse 1s infinite; }
-@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+.speaker-btn:hover { background: var(--red-soft); }
+.speaker-btn.playing { animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
 .tz-stroke { transition: fill 0.3s ease; }
 
+footer {
+    text-align: center; color: var(--muted); font-size: 0.85em;
+    padding: 26px 20px 10px; border-top: 1px solid #e8e0cd; margin-top: 30px; line-height: 1.8;
+}
+
 /* ===== 手机端适配 ===== */
-html, body { overflow-x: hidden; }
-.tianzi-display svg { width: 100% !important; height: auto !important; display: block; }
 @media (max-width: 640px) {
-    .container { padding: 10px; }
-    header { padding: 18px 10px 10px; }
-    h1 { font-size: 1.7em; letter-spacing: 2px; }
-    .search-box { padding: 12px 16px; }
-    #searchInput { font-size: 1.2em; }
-    .card { padding: 16px; border-radius: 16px; }
-    .char-display { flex-direction: column; align-items: center; gap: 14px; padding: 14px; }
-    .tianzi-display { width: 70vw; max-width: 240px; flex-shrink: 1; }
-    .char-info { text-align: center; }
-    .char-info .tianzi-actions { justify-content: center !important; }
-    .pinyin { font-size: 1.6em; }
+    .container { padding: 12px 10px 30px; }
+    header { padding: 12px 10px; margin-bottom: 16px; }
+    h1 { font-size: 1.5em; letter-spacing: 5px; text-indent: 5px; }
+    .search-box { padding: 10px 14px; }
+    #searchInput { font-size: 1.15em; }
+    .card { padding: 16px; border-radius: 8px; }
+    .char-display { flex-direction: column; align-items: center; gap: 12px; }
+    .tianzi-display { width: 70vw; max-width: 240px; }
+    .tianzi-display svg { width: 100% !important; height: auto !important; }
+    .char-info { width: 100%; }
+    .meta-row { justify-content: center; }
+    .tianzi-actions { text-align: center; }
+    .tab { padding: 6px 12px; font-size: 0.92em; }
     .mnemonic-text { font-size: 1em; }
-    .tab { padding: 8px 14px; font-size: 0.95em; }
 }
 </style>
 <script>
@@ -365,7 +221,7 @@ const STROKE_DB = {"丁":{"strokes":["M 531 651 Q 736 675 868 663 Q 893 662 899 
 <body>
 <div class="container">
     <header>
-        <h1>📚 生字口诀查询</h1>
+        <h1>生字口诀查询</h1>
         <p class="subtitle">小学语文 · 一至二年级</p>
     </header>
 
@@ -391,7 +247,7 @@ const STROKE_DB = {"丁":{"strokes":["M 531 651 Q 736 675 868 663 Q 893 662 899 
     </div>
 
     <div class="char-grid-section">
-        <div class="char-grid-title">📝 汉字列表 <span id="gridHint" style="color:#95a5a6;font-size:0.85em;font-weight:normal;">（点击查看口诀）</span></div>
+        <div class="char-grid-title">汉字列表 <span id="gridHint" style="color:#95a5a6;font-size:0.85em;font-weight:normal;">（点击查看口诀）</span></div>
         <div class="char-grid" id="charGrid"></div>
     </div>
 
@@ -473,10 +329,10 @@ function selectChar(ch) {
         <div class="char-display">
             <div class="tianzi-display" id="tianziDisplay">${generateTianZiGeSVG(ch, TIANZI_CONFIG.sizes.medium)}</div>
             <div class="char-info">
-                <div class="pinyin">${data.pinyin || ''}</div>
-                <div><span class="grade-badge">${data.grade}</span></div>
-                <div class="tianzi-actions" style="justify-content:flex-start;margin-top:10px;">
-                    <button class="btn btn-primary" onclick="downloadResultTianZi('${ch.replace(/'/g, "\\'")}')">📥 下载田字格 PNG</button>
+                <div class="meta-row"><span class="meta-label">拼音</span><span class="meta-value pinyin-text">${data.pinyin || ''}</span></div>
+                <div class="meta-row"><span class="meta-label">年级</span><span class="meta-value">${data.grade}</span><span class="meta-label" style="margin-left:20px;">笔画</span><span class="meta-value">${(STROKE_DB[ch] && STROKE_DB[ch].strokes) ? STROKE_DB[ch].strokes.length + ' 画' : ''}</span></div>
+                <div class="tianzi-actions">
+                    <button class="btn" onclick="downloadResultTianZi('${ch.replace(/'/g, "\\'")}')">下载田字格 PNG</button>
                 </div>
             </div>
         </div>
@@ -484,22 +340,22 @@ function selectChar(ch) {
     if (data.mnemonic) {
         // Highlight the stroke type words (横/竖/撇/捺/点/折/钩/提)
         const highlighted = data.mnemonic
-            .replace(/(横|竖|撇|捺|点|折|钩|提|短横|长横|短竖|长竖|短撇|长撇|竖钩|竖弯钩|横折|横折钩|横折弯钩|横撇|竖折|撇折|点提|横钩|弯钩|卧钩|斜钩|平撇|平捺)/g, '<b style="color:#e74c3c">$1</b>')
-            .replace(/(竖中线|横中线|左上格|左下格|右上格|右下格|中心|上方|下方|左边|右边|等距|不靠边|起笔|落笔|穿|到|在)/g, '<span style="color:#2980b9">$1</span>')
-            .replace(/(一笔|二笔|三笔|四笔|五笔|六笔|七笔|八笔|九笔|十笔|十一笔|十二笔|十三笔|十四笔|十五笔)/g, '<b style="color:#16a085">$1</b>');
+            .replace(/(横|竖|撇|捺|点|折|钩|提|短横|长横|短竖|长竖|短撇|长撇|竖钩|竖弯钩|横折|横折钩|横折弯钩|横撇|竖折|撇折|点提|横钩|弯钩|卧钩|斜钩|平撇|平捺)/g, '<b style="color:#8e2f27">$1</b>')
+            .replace(/(竖中线|横中线|左上格|左下格|右上格|右下格|中心|上方|下方|左边|右边|等距|不靠边|起笔|落笔|穿|到|在)/g, '<span style="color:#5b6b8c">$1</span>')
+            .replace(/(一笔|二笔|三笔|四笔|五笔|六笔|七笔|八笔|九笔|十笔|十一笔|十二笔|十三笔|十四笔|十五笔)/g, '<b style="color:#2f6b4f">$1</b>');
         const speakerBtn = (typeof speechSynthesis !== 'undefined')
             ? ` <button class="speaker-btn" id="speakerBtn" onclick="toggleSpeak()" title="朗读口诀">🔊</button>`
             : '';
         html += `
             <div class="mnemonic-section">
-                <div class="section-title">✍️ 写字口诀${speakerBtn}</div>
+                <div class="section-title">写字口诀${speakerBtn}</div>
                 <div class="mnemonic-text">${highlighted}</div>
             </div>
         `;
     } else {
         html += `
             <div class="mnemonic-section">
-                <div class="section-title">✍️ 写字口诀</div>
+                <div class="section-title">写字口诀</div>
                 <div class="mnemonic-text" style="color:#95a5a6;">暂无口诀</div>
             </div>
         `;
@@ -507,7 +363,7 @@ function selectChar(ch) {
     if (data.tip) {
         html += `
             <div class="mnemonic-section">
-                <div class="section-title">💡 书写要点</div>
+                <div class="section-title">书写要点</div>
                 <div class="tip-text">${data.tip}</div>
             </div>
         `;
@@ -571,11 +427,11 @@ renderGrid();
 
 // ===== 田字格图片生成器 =====
 const TIANZI_CONFIG = {
-    borderColor: '#2196F3',     // 蓝色边框
+    borderColor: '#8e2f27',     // 深红边框
     borderWidth: 4,
-    dashColor: '#5BC0DE',       // 浅蓝色虚线
+    dashColor: '#d0a89e',       // 浅红虚线
     dashWidth: 2,
-    charColor: '#FF6B6B',       // 粉红色汉字
+    charColor: '#2e2a26',       // 墨色汉字
     dashExt: 12,                // 虚线超出边框的长度
     fontFamily: "'楷体', 'KaiTi', 'STKaiti', 'STZhongsong', 'FangSong', 'STFangsong', '仿宋', serif",
     sizes: { small: 200, medium: 320, large: 480 }
@@ -821,8 +677,7 @@ function stopSpeaking() {
 function highlightStroke(index) {
     const p = document.getElementById('tz-stroke-' + index);
     if (p) {
-        const hue = Math.floor(Math.random() * 360);
-        p.setAttribute('fill', `hsl(${hue}, 75%, 50%)`);
+        p.setAttribute('fill', '#c0392b');
     }
 }
 
