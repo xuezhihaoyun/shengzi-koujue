@@ -191,6 +191,15 @@ footer {
     .tab { padding: 6px 12px; font-size: 0.92em; }
     .mnemonic-text { font-size: 1em; }
 }
+
+.btn-ghost { background: #fff; color: var(--red); border: 1px solid var(--red); margin-left: 8px; }
+.btn-ghost:hover { background: #fbf1ef; }
+#fbToast {
+    position: fixed; left: 50%; bottom: 60px; transform: translateX(-50%);
+    background: rgba(46,42,38,0.92); color: #fff; padding: 10px 22px;
+    border-radius: 6px; font-size: 0.95em; display: none; z-index: 99;
+    max-width: 86vw; text-align: center; line-height: 1.6;
+}
 </style>
 <script>
 // 内嵌笔画数据（205个汉字，离线可用）
@@ -335,6 +344,7 @@ function selectChar(ch) {
                 <div class="meta-row"><span class="meta-label">年级</span><span class="meta-value">${data.grade}</span>${data.generated ? '</div><div class="meta-row"><span class="meta-label">来源</span><span class="meta-value" style="font-size:0.95em;color:#8a8073;">智能生成 · 未人工审校，仅供参考</span>' : ''}<span class="meta-label" style="margin-left:20px;">笔画</span><span class="meta-value">${(STROKE_DB[ch] && STROKE_DB[ch].strokes) ? STROKE_DB[ch].strokes.length + ' 画' : ''}</span></div>
                 <div class="tianzi-actions">
                     <button class="btn" onclick="downloadResultTianZi('${ch.replace(/'/g, "\\'")}')">下载田字格 PNG</button>
+                    <button class="btn btn-ghost" onclick="feedbackChar('${ch.replace(/'/g, "\\'")}')">反馈纠错</button>
                 </div>
             </div>
         </div>
@@ -973,6 +983,32 @@ function generateForChar(ch, onOk, onFail) {
             strokes: d.strokes, medians: d.medians
         });
     }).catch(() => { onFail && onFail(); });
+}
+</script>
+<div id="fbToast"></div>
+<script>
+// ===== 反馈纠错：复制该字口诀到剪贴板 =====
+function feedbackChar(ch) {
+    const d = DATA[ch] || {};
+    const text = '【生字口诀反馈】\n字：' + ch + '\n拼音：' + (d.pinyin || '') +
+        '\n口诀：' + (d.mnemonic || '') + '\n书写要点：' + (d.tip || '（无）') +
+        '\n问题描述（请补充）：';
+    const done = function() {
+        const t = document.getElementById('fbToast');
+        t.textContent = '已复制「' + ch + '」的信息，请粘贴发到班级群或发给老师，我们会定期统一修订 🙏';
+        t.style.display = 'block';
+        setTimeout(function(){ t.style.display = 'none'; }, 3200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text); done(); });
+    } else { fallbackCopy(text); done(); }
+}
+function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
 }
 </script>
 </body>
